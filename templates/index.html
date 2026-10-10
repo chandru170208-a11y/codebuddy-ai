@@ -300,7 +300,15 @@ form.addEventListener("submit", async function(event) {
             throw new Error(data.error || "Request failed.");
         }
 
-        reply.textContent = data.reply || "No response received.";
+        reply.innerHTML = data.reply
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/```(\w*)\n([\s\S]*?)```/g,
+        "<pre><code>$2</code></pre>")
+    .replace(/\n/g, "<br>");
     } catch (error) {
         reply.textContent =
             "Unable to connect to the AI service. " +
